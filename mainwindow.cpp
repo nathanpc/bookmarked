@@ -8,10 +8,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  ui(new Ui::MainWindow) {
 	ui->setupUi(this);
 
+	// Setup the delete action for the bookmarks.
+	QAction *action_delbookmark = new QAction(ui->tableView);
+	action_delbookmark->setText("Delete");
+	action_delbookmark->setShortcut(QKeySequence::Delete);
+	connect(action_delbookmark, SIGNAL(triggered()), this, SLOT(on_actionRemove_selected_bookmark_triggered()));
+	ui->tableView->addAction(action_delbookmark);
+
 	// Open a connection with the database.
 	db = new Database();
 	if (!db->open()) {
-		QMessageBox::critical(this, "Database Error", "Couldn't open the database.");
+		QMessageBox::critical(this, tr("Database Error"), tr("Couldn't open the database."));
 	}
 
 	// Get the books and bookmarks.
@@ -94,7 +101,14 @@ void MainWindow::on_books_clicked(const QModelIndex &index) {
 }
 
 void MainWindow::on_actionRemove_selected_bookmark_triggered() {
-	QMessageBox::information(this, "Not yet implemented", "Sorry, this feature hasn't been implemented yet.");
+	int row = ui->tableView->selectionModel()->currentIndex().row();
+	qDebug() << "Deleting bookmark row: " << row;
+
+	if (row >= 0) {
+		ui->tableView->model()->removeRow(row);
+	} else {
+		QMessageBox::information(this, tr("Bad User"), tr("No bookmark selected"));
+	}
 }
 
 void MainWindow::on_actionDelete_Current_Book_triggered() {
