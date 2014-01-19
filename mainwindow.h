@@ -28,6 +28,8 @@ class MainWindow : public QMainWindow {
 		void on_books_clicked(const QModelIndex &index);
 		void on_actionRemove_selected_bookmark_triggered();
 		void on_actionDelete_Current_Book_triggered();
+		void on_actionPayPal_triggered();
+		void on_actionFlattr_triggered();
 };
 
 #endif // MAINWINDOW_H

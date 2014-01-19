@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -126,4 +127,23 @@ void MainWindow::on_actionRemove_selected_bookmark_triggered() {
  */
 void MainWindow::on_actionDelete_Current_Book_triggered() {
 	QMessageBox::information(this, "Not yet implemented", "Sorry, this feature hasn't been implemented yet.");
+}
+
+/**
+ * Donate via PayPal.
+ */
+void MainWindow::on_actionPayPal_triggered() {
+	QUrl url = QUrl("https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business="
+					"eeepc904%40gmail%2ecom&lc=BR&item_name=Bookmarked%20Developer"
+					"%20%28Nathan%20Campos%29&item_number=BookmarkedDonation&"
+					"currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted");
+	QDesktopServices::openUrl(url);
+}
+
+/**
+ * Donate via Flattr.
+ */
+void MainWindow::on_actionFlattr_triggered() {
+	QUrl url = QUrl("https://flattr.com/profile/nathanpc");
+	QDesktopServices::openUrl(url);
 }
