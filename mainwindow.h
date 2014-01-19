@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 
+#include "database.h"
+
 namespace Ui {
 	class MainWindow;
 }
@@ -12,6 +14,7 @@ class MainWindow : public QMainWindow {
 
 	private:
 		Ui::MainWindow *ui;
+		Database *db;
 
 	public:
 		explicit MainWindow(QWidget *parent = 0);
