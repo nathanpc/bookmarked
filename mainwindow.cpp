@@ -64,7 +64,39 @@ void MainWindow::on_actionNew_Book_triggered() {
 }
 
 void MainWindow::on_books_clicked(const QModelIndex &index) {
-	qDebug() << "Book selected:" << index.row() << db->books[index.row()]["title"].toString();
+	QHash<QString, QVariant> book = db->books[index.row()];
+	qDebug() << "Book selected:" << index.row() << book["title"].toString();
 
-	db->getBookmark(db->books[index.row()]["isbn"].toString());
+	// Populate the view.
+	ui->title_label->setText(book["title"].toString());
+	ui->authors_label->setText(book["authors"].toString());
+
+	// Set the book cover.
+	QImage image = QImage::fromData(book["cover"].toByteArray()).scaledToHeight(140);
+	QPixmap pixmap = QPixmap::fromImage(image);
+	ui->cover_label->setPixmap(pixmap);
+
+	// Get the bookmarks.
+	QString isbn = book["isbn"].toString();
+	QSqlTableModel *model = new QSqlTableModel(this, db->db);
+	model->setTable("Bookmarks");
+	model->setEditStrategy(QSqlTableModel::OnFieldChange);
+	model->setFilter("isbn=\"" + isbn + "\"");
+	model->setSort(1, Qt::AscendingOrder);
+	model->select();
+
+	model->setHeaderData(1, Qt::Horizontal, tr("Page"));
+	model->setHeaderData(2, Qt::Horizontal, tr("Description"));
+
+	ui->tableView->setModel(model);
+	ui->tableView->hideColumn(0);
+	ui->tableView->resizeColumnsToContents();
+}
+
+void MainWindow::on_actionRemove_selected_bookmark_triggered() {
+	QMessageBox::information(this, "Not yet implemented", "Sorry, this feature hasn't been implemented yet.");
+}
+
+void MainWindow::on_actionDelete_Current_Book_triggered() {
+	QMessageBox::information(this, "Not yet implemented", "Sorry, this feature hasn't been implemented yet.");
 }

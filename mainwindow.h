@@ -26,6 +26,8 @@ class MainWindow : public QMainWindow {
 		void on_books_currentIndexChanged(int index);
 		void on_actionNew_Book_triggered();
 		void on_books_clicked(const QModelIndex &index);
+		void on_actionRemove_selected_bookmark_triggered();
+		void on_actionDelete_Current_Book_triggered();
 };
 
 #endif // MAINWINDOW_H

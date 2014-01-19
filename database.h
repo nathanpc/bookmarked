@@ -10,9 +10,10 @@ class Database : public QObject {
 	Q_OBJECT
 
 	private:
-		QSqlDatabase db;
+
 
 	public:
+		QSqlDatabase db;
 		QString error_msg;
 		QList<QHash<QString, QVariant> > books;
 
