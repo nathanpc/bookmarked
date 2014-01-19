@@ -14,9 +14,12 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
 		mainwindow.cpp \
-	database.cpp
+	database.cpp \
+    newbookdialog.cpp
 
 HEADERS  += mainwindow.h \
-	database.h
+	database.h \
+    newbookdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    newbookdialog.ui
