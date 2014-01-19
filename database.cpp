@@ -24,7 +24,7 @@ bool Database::open() {
  *
  * @return Number of rows returned.
  */
-int Database::get_books() {
+int Database::getBooks() {
 	// Clear the cache.
 	books.clear();
 
@@ -52,7 +52,7 @@ int Database::get_books() {
  *
  * @return Number of rows returned.
  */
-int Database::get_bookmarks() {
+int Database::getBookmarks() {
 	// Clear the cache.
 	bookmarks.clear();
 

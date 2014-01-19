@@ -20,8 +20,8 @@ class Database : public QObject {
 		explicit Database(QObject *parent = 0);
 
 		bool open();
-		int get_books();
-		int get_bookmarks();
+		int getBooks();
+		int getBookmarks();
 
 	signals:
 
