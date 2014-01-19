@@ -3,6 +3,9 @@
 
 #include <QDialog>
 #include <QNetworkReply>
+#include <QHash>
+
+#include "database.h"
 
 namespace Ui {
 	class NewBookDialog;
@@ -15,16 +18,20 @@ class NewBookDialog : public QDialog {
 		Ui::NewBookDialog *ui;
 		QNetworkReply *book_cover_reply;
 		QNetworkReply *book_info_reply;
+		QString isbndb_key;
+
 		bool got_cover;
 		bool got_info;
-		QImage cover;
-		QString isbndb_key;
+		QByteArray cover;
+		QHash<QString, QString> info;
 
 		void grabBookCover(QString isbn);
 		void grabBookInformation(QString isbn);
 		void everythingDone();
 
 	public:
+		Database *db;
+
 		explicit NewBookDialog(QWidget *parent = 0);
 		~NewBookDialog();
 

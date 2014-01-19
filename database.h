@@ -14,7 +14,7 @@ class Database : public QObject {
 
 	public:
 		QString error_msg;
-		QList<QHash<QString, QString> > books;
+		QList<QHash<QString, QVariant> > books;
 		QList<QHash<QString, QString> > bookmarks;
 
 		explicit Database(QObject *parent = 0);

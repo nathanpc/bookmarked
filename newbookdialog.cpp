@@ -61,7 +61,16 @@ void NewBookDialog::grabBookInformation(QString isbn) {
  */
 void NewBookDialog::everythingDone() {
 	if (got_cover && got_info) {
-		// TODO: Put the data into the db.
+		QSqlQuery query;
+		query.prepare("INSERT INTO Books (isbn, title, authors, cover) "
+						  "VALUES (:isbn, :title, :authors, :cover)");
+
+		query.bindValue(":isbn", info["isbn"]);
+		query.bindValue(":title", info["title"]);
+		query.bindValue(":authors", info["authors"]);
+		query.bindValue(":cover", cover);
+
+		query.exec();
 		done(QDialog::Accepted);
 	}
 }
@@ -79,8 +88,7 @@ void NewBookDialog::accept() {
 
 void NewBookDialog::on_book_cover_Finished() {
 	// Grab the image data.
-	QByteArray data = book_cover_reply->readAll();
-	cover = QImage::fromData(data);
+	cover = book_cover_reply->readAll();
 
 	//QPixmap pixmap = QPixmap::fromImage(QImage::fromData(data));
 	// Insert the image into the list item.
@@ -97,14 +105,17 @@ void NewBookDialog::on_book_info_Finished() {
 	QByteArray data = book_info_reply->readAll();
 	qDebug() << "Got the info data";
 
+	// Parse the document.
 	QJsonParseError err;
 	QJsonObject json = QJsonDocument::fromJson(data, &err).object();
 
 	// TODO: Check for error.
 
+	// Get the important root.
 	QJsonObject info = json.value("data").toArray()[0].toObject();
 	QJsonArray authors_arr = info.value("author_data").toArray();
 
+	// Get the authors.
 	QString authors;
 	for (int i = 0; i < authors_arr.size(); ++i) {
 		if (i > 0) {
@@ -114,11 +125,18 @@ void NewBookDialog::on_book_info_Finished() {
 		authors += authors_arr[i].toObject().value("name").toString();
 	}
 
+	// Get ISBN-10 and title.
 	QString isbn = info.value("isbn10").toString();
 	QString title = info.value("title").toString();
 
 	qDebug() << "Parsed the data:" << isbn << title << authors;
 
+	// Populate the global info.
+	this->info["isbn"]    = isbn;
+	this->info["title"]   = title;
+	this->info["authors"] = authors;
+
+	// Finish.
 	got_info = true;
 	everythingDone();
 }

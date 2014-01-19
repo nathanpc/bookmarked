@@ -16,12 +16,10 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
 	// Get the books and bookmarks.
 	db->getBooks();
-	db->getBookmarks();
+	//db->getBookmarks();
 
 	// Populate the UI elements.
 	populateBooks();
-
-	//grab_book_cover("087259923X", 0);
 }
 
 MainWindow::~MainWindow() {
@@ -35,8 +33,13 @@ void MainWindow::populateBooks() {
 	QListWidget *listview = ui->books;
 
 	for (int i = 0; i < db->books.size(); ++i) {
-		QListWidgetItem *item = new QListWidgetItem(db->books[i]["title"], listview);
-		//item.setData(QPixmap::fromImage(image), Qt::DecorationRole);
+		// Create thumbnail.
+		QImage thumbnail = QImage::fromData(db->books[i]["cover"].toByteArray());
+		thumbnail = thumbnail.scaledToHeight(75);
+
+		// Create the list item.
+		QListWidgetItem *item = new QListWidgetItem(db->books[i]["title"].toString(), listview);
+		item->setData(Qt::DecorationRole, QPixmap::fromImage(thumbnail));
 	}
 }
 
@@ -55,6 +58,7 @@ void MainWindow::on_books_currentIndexChanged(int index) {
 
 void MainWindow::on_actionNew_Book_triggered() {
 	NewBookDialog *dialog = new NewBookDialog(this);
+	dialog->db = db;
 	dialog->setISBNDBKey("KPAQI8LK");
 	dialog->exec();
 }

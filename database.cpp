@@ -35,13 +35,17 @@ int Database::getBooks() {
 	while (query.next()) {
 		QString isbn  = query.value(0).toString();
 		QString title = query.value(1).toString();
+		QString authors  = query.value(2).toString();
+		QByteArray cover = query.value(3).toByteArray();
 
-		QHash<QString, QString> book;
-		book["isbn"] = isbn;
-		book["title"] = title;
+		QHash<QString, QVariant> book;
+		book["isbn"]    = isbn;
+		book["title"]   = title;
+		book["authors"] = authors;
+		book["cover"]   = cover;
 
 		books << book;
-		qDebug() << "Book:" << isbn << title;
+		qDebug() << "Book:" << isbn << title << authors;
 	}
 
 	return query.size();
