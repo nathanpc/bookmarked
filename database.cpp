@@ -52,24 +52,26 @@ int Database::getBooks() {
 }
 
 /**
- * Get the bookmarks from the database and store it in Database::bookmarks.
+ * Get the bookmarks from a book.
  *
- * @return Number of rows returned.
+ * @param isbn Book's ISBN.
+ * @return Bookmarks list.
  */
-int Database::getBookmarks() {
-	// Clear the cache.
-	bookmarks.clear();
+QList<QHash<QString, QVariant> > Database::getBookmark(QString isbn) {
+	QList<QHash<QString, QVariant> > bookmarks;
 
 	// Query the database.
 	QSqlQuery query;
-	query.exec("SELECT * FROM Bookmarks");
+	query.prepare("SELECT * FROM Bookmarks WHERE isbn=:isbn ORDER BY page");
+	query.bindValue(":isbn", isbn);
+	query.exec();
 
 	while (query.next()) {
 		QString isbn = query.value(0).toString();
-		QString page = query.value(1).toString();
+		int page = query.value(1).toInt();
 		QString description = query.value(2).toString();
 
-		QHash<QString, QString> bookmark;
+		QHash<QString, QVariant> bookmark;
 		bookmark["isbn"] = isbn;
 		bookmark["page"] = page;
 		bookmark["description"] = description;
@@ -78,5 +80,5 @@ int Database::getBookmarks() {
 		qDebug() << "Bookmark:" << isbn << page << description;
 	}
 
-	return query.size();
+	return bookmarks;
 }

@@ -62,3 +62,9 @@ void MainWindow::on_actionNew_Book_triggered() {
 	dialog->setISBNDBKey("KPAQI8LK");
 	dialog->exec();
 }
+
+void MainWindow::on_books_clicked(const QModelIndex &index) {
+	qDebug() << "Book selected:" << index.row() << db->books[index.row()]["title"].toString();
+
+	db->getBookmark(db->books[index.row()]["isbn"].toString());
+}

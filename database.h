@@ -15,13 +15,12 @@ class Database : public QObject {
 	public:
 		QString error_msg;
 		QList<QHash<QString, QVariant> > books;
-		QList<QHash<QString, QString> > bookmarks;
 
 		explicit Database(QObject *parent = 0);
 
 		bool open();
 		int getBooks();
-		int getBookmarks();
+		QList<QHash<QString, QVariant> > getBookmark(QString isbn);
 
 	signals:
 

@@ -89,11 +89,6 @@ void NewBookDialog::accept() {
 void NewBookDialog::on_book_cover_Finished() {
 	// Grab the image data.
 	cover = book_cover_reply->readAll();
-
-	//QPixmap pixmap = QPixmap::fromImage(QImage::fromData(data));
-	// Insert the image into the list item.
-	//ui->books->item(row)->setData(Qt::DecorationRole, pixmap);
-
 	qDebug() << "Got the image data";
 
 	got_cover = true;

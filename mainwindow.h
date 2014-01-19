@@ -25,6 +25,7 @@ class MainWindow : public QMainWindow {
 	private slots:
 		void on_books_currentIndexChanged(int index);
 		void on_actionNew_Book_triggered();
+		void on_books_clicked(const QModelIndex &index);
 };
 
 #endif // MAINWINDOW_H
