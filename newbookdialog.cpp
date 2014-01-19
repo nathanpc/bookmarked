@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QJsonParseError>
 #include <QJsonObject>
+#include <QAbstractButton>
 
 #include "newbookdialog.h"
 #include "ui_newbookdialog.h"
@@ -75,10 +76,16 @@ void NewBookDialog::everythingDone() {
 	}
 }
 
+/**
+ * Called when the user hits the "Ok" button.
+ */
 void NewBookDialog::accept() {
 	QString isbn = ui->isbn->text();
 
 	if (!isbn.isEmpty()) {
+		ui->buttonBox->buttons()[0]->setEnabled(false);
+		ui->buttonBox->buttons()[1]->setEnabled(false);
+
 		grabBookCover(isbn);
 		grabBookInformation(isbn);
 	} else {
@@ -86,6 +93,9 @@ void NewBookDialog::accept() {
 	}
 }
 
+/**
+ * Stores the book cover data.
+ */
 void NewBookDialog::on_book_cover_Finished() {
 	// Grab the image data.
 	cover = book_cover_reply->readAll();
@@ -95,6 +105,9 @@ void NewBookDialog::on_book_cover_Finished() {
 	everythingDone();
 }
 
+/**
+ * Parses the book information from ISBNdb.
+ */
 void NewBookDialog::on_book_info_Finished() {
 	// Grab the info data.
 	QByteArray data = book_info_reply->readAll();

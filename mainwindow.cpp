@@ -21,11 +21,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 		QMessageBox::critical(this, tr("Database Error"), tr("Couldn't open the database."));
 	}
 
-	// Get the books and bookmarks.
+	// Get the books and populate the list.
 	db->getBooks();
-	//db->getBookmarks();
-
-	// Populate the UI elements.
 	populateBooks();
 }
 
@@ -63,6 +60,9 @@ void MainWindow::on_books_currentIndexChanged(int index) {
 	}
 }
 
+/**
+ * Launches the new book dialog.
+ */
 void MainWindow::on_actionNew_Book_triggered() {
 	NewBookDialog *dialog = new NewBookDialog(this);
 	dialog->db = db;
@@ -70,6 +70,11 @@ void MainWindow::on_actionNew_Book_triggered() {
 	dialog->exec();
 }
 
+/**
+ * A book was selected by the user.
+ *
+ * @param index Index of the selected item.
+ */
 void MainWindow::on_books_clicked(const QModelIndex &index) {
 	QHash<QString, QVariant> book = db->books[index.row()];
 	qDebug() << "Book selected:" << index.row() << book["title"].toString();
@@ -92,14 +97,19 @@ void MainWindow::on_books_clicked(const QModelIndex &index) {
 	model->setSort(1, Qt::AscendingOrder);
 	model->select();
 
+	// Rename the headers.
 	model->setHeaderData(1, Qt::Horizontal, tr("Page"));
 	model->setHeaderData(2, Qt::Horizontal, tr("Description"));
 
+	// Set the model and adjust the table.
 	ui->tableView->setModel(model);
 	ui->tableView->hideColumn(0);
 	ui->tableView->resizeColumnsToContents();
 }
 
+/**
+ * The user wants to delete a bookmark.
+ */
 void MainWindow::on_actionRemove_selected_bookmark_triggered() {
 	int row = ui->tableView->selectionModel()->currentIndex().row();
 	qDebug() << "Deleting bookmark row: " << row;
@@ -111,6 +121,9 @@ void MainWindow::on_actionRemove_selected_bookmark_triggered() {
 	}
 }
 
+/**
+ * The user wants to delete a book.
+ */
 void MainWindow::on_actionDelete_Current_Book_triggered() {
 	QMessageBox::information(this, "Not yet implemented", "Sorry, this feature hasn't been implemented yet.");
 }
