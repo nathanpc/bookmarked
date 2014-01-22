@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "newbookdialog.h"
+#include "addbookmarkdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  ui(new Ui::MainWindow) {
@@ -49,7 +50,31 @@ void MainWindow::populateBooks() {
 }
 
 /**
- * Books ComboBox index has changed.
+ * Populate the bookmarks into the table view.
+ *
+ * @param isbn The ISBN of the book.
+ */
+void MainWindow::populateBookmarks(QString isbn) {
+	// Get the bookmarks.
+	QSqlTableModel *model = new QSqlTableModel(this, db->db);
+	model->setTable("Bookmarks");
+	model->setEditStrategy(QSqlTableModel::OnFieldChange);
+	model->setFilter("isbn=\"" + isbn + "\"");
+	model->setSort(1, Qt::AscendingOrder);
+	model->select();
+
+	// Rename the headers.
+	model->setHeaderData(1, Qt::Horizontal, tr("Page"));
+	model->setHeaderData(2, Qt::Horizontal, tr("Description"));
+
+	// Set the model and adjust the table.
+	ui->tableView->setModel(model);
+	ui->tableView->hideColumn(0);
+	ui->tableView->resizeColumnsToContents();
+}
+
+/**
+ * Books list index has changed.
  *
  * @param index Selected index.
  */
@@ -89,23 +114,8 @@ void MainWindow::on_books_clicked(const QModelIndex &index) {
 	QPixmap pixmap = QPixmap::fromImage(image);
 	ui->cover_label->setPixmap(pixmap);
 
-	// Get the bookmarks.
-	QString isbn = book["isbn"].toString();
-	QSqlTableModel *model = new QSqlTableModel(this, db->db);
-	model->setTable("Bookmarks");
-	model->setEditStrategy(QSqlTableModel::OnFieldChange);
-	model->setFilter("isbn=\"" + isbn + "\"");
-	model->setSort(1, Qt::AscendingOrder);
-	model->select();
-
-	// Rename the headers.
-	model->setHeaderData(1, Qt::Horizontal, tr("Page"));
-	model->setHeaderData(2, Qt::Horizontal, tr("Description"));
-
-	// Set the model and adjust the table.
-	ui->tableView->setModel(model);
-	ui->tableView->hideColumn(0);
-	ui->tableView->resizeColumnsToContents();
+	// Populate the bookmarks table.
+	populateBookmarks(book["isbn"].toString());
 }
 
 /**
@@ -117,6 +127,10 @@ void MainWindow::on_actionRemove_selected_bookmark_triggered() {
 
 	if (row >= 0) {
 		ui->tableView->model()->removeRow(row);
+
+		// Refresh the table.
+		QModelIndexList indexes = ui->books->selectionModel()->selectedIndexes();
+		populateBookmarks(db->books[indexes[0].row()]["isbn"].toString());
 	} else {
 		QMessageBox::information(this, tr("Bad User"), tr("No bookmark selected"));
 	}
@@ -146,4 +160,30 @@ void MainWindow::on_actionPayPal_triggered() {
 void MainWindow::on_actionFlattr_triggered() {
 	QUrl url = QUrl("https://flattr.com/profile/nathanpc");
 	QDesktopServices::openUrl(url);
+}
+
+/**
+ * Opens the add bookmark dialog.
+ */
+void MainWindow::on_add_bookmark_clicked() {
+	QModelIndexList indexes = ui->books->selectionModel()->selectedIndexes();
+
+	if (indexes.length() > 0) {
+		AddBookmarkDialog *dialog = new AddBookmarkDialog();
+		dialog->db = db;
+		dialog->isbn = db->books[indexes[0].row()]["isbn"].toString();
+		dialog->show();
+
+		connect(dialog, SIGNAL(finished(int)), this, SLOT(on_AddBookmarkDialog_accepted(int)));
+	}
+}
+
+/**
+ * The user added a new bookmark and we should refresh the model.
+ */
+void MainWindow::on_AddBookmarkDialog_accepted(int status) {
+	if (status == QDialog::Accepted) {
+		QModelIndexList indexes = ui->books->selectionModel()->selectedIndexes();
+		populateBookmarks(db->books[indexes[0].row()]["isbn"].toString());
+	}
 }
