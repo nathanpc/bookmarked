@@ -33,6 +33,8 @@ class MainWindow : public QMainWindow {
 		void on_actionPayPal_triggered();
 		void on_actionFlattr_triggered();
 		void on_add_bookmark_clicked();
+		void on_actionAbout_triggered();
+		void on_actionContact_Developer_triggered();
 };
 
 #endif // MAINWINDOW_H

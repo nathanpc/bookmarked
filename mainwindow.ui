@@ -253,15 +253,18 @@
     <addaction name="actionRemove_selected_bookmark"/>
     <addaction name="actionDelete_Current_Book"/>
    </widget>
-   <widget class="QMenu" name="menuDonate">
+   <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Donate</string>
+     <string>Help</string>
     </property>
     <addaction name="actionPayPal"/>
     <addaction name="actionFlattr"/>
+    <addaction name="separator"/>
+    <addaction name="actionContact_Developer"/>
+    <addaction name="actionAbout"/>
    </widget>
    <addaction name="menuManage"/>
-   <addaction name="menuDonate"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -289,12 +292,27 @@
   </action>
   <action name="actionPayPal">
    <property name="text">
-    <string>PayPal</string>
+    <string>Donate via PayPal</string>
    </property>
   </action>
   <action name="actionFlattr">
    <property name="text">
-    <string>Flattr</string>
+    <string>Donate via Flattr</string>
+   </property>
+  </action>
+  <action name="actionAbout">
+   <property name="text">
+    <string>About</string>
+   </property>
+  </action>
+  <action name="actionAnotehr">
+   <property name="text">
+    <string>Anotehr</string>
+   </property>
+  </action>
+  <action name="actionContact_Developer">
+   <property name="text">
+    <string>Contact Developer</string>
    </property>
   </action>
  </widget>

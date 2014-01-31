@@ -5,6 +5,7 @@
 #include "ui_mainwindow.h"
 #include "newbookdialog.h"
 #include "addbookmarkdialog.h"
+#include "aboutdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  ui(new Ui::MainWindow) {
@@ -186,4 +187,21 @@ void MainWindow::on_AddBookmarkDialog_accepted(int status) {
 		QModelIndexList indexes = ui->books->selectionModel()->selectedIndexes();
 		populateBookmarks(db->books[indexes[0].row()]["isbn"].toString());
 	}
+}
+
+/**
+ * Show the about dialog.
+ */
+void MainWindow::on_actionAbout_triggered() {
+	AboutDialog *dialog = new AboutDialog();
+	dialog->setDetail("Bookmarked", "1.0");
+	dialog->show();
+}
+
+/**
+ * Contact the developer.
+ */
+void MainWindow::on_actionContact_Developer_triggered() {
+	QUrl url = QUrl("mailto:nathanpc@dreamintech.net");
+	QDesktopServices::openUrl(url);
 }
