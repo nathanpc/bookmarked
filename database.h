@@ -17,6 +17,7 @@ class Database : public QObject {
 		explicit Database(QObject *parent = 0);
 
 		bool open();
+		void initTables();
 
 		int getBooks();
 		QList<QHash<QString, QVariant> > getBookmark(QString isbn);

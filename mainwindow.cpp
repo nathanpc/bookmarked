@@ -18,6 +18,8 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	db = new Database();
 	if (!db->open()) {
 		QMessageBox::critical(this, tr("Database Error"), tr("Couldn't open the database."));
+	} else {
+		db->initTables();
 	}
 
 	// Get the books and populate the list.

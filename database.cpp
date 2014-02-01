@@ -11,12 +11,42 @@ Database::Database(QObject *parent) : QObject(parent) {
  * @return Status of the connection. False indicates it couldn't open.
  */
 bool Database::open() {
+	// Build the path to the database.
+	QString db_path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+	if (!QDir(db_path).exists()) {
+		QDir().mkdir(db_path);
+	}
+
+	// Set the database file.
+	db_path = db_path + QDir::separator() + "database.sqlite";
+
 	// Setup the connection.
 	db = QSqlDatabase::addDatabase("QSQLITE");
-	db.setDatabaseName("/home/nathanpc/Developer/Qt/Bookmarked/bookmarked.db"); // TODO: Use a common path.
+	//db.setDatabaseName("/home/nathanpc/Developer/Qt/Bookmarked/bookmarked.db");
+	db.setDatabaseName(db_path);
 
 	// Open the connection to the database.
 	return db.open();
+}
+
+/**
+ * Creates the basic tables if the database is new.
+ */
+void Database::initTables() {
+	QSqlQuery query;
+
+	// Creates the Book table.
+	query.exec("CREATE TABLE IF NOT EXISTS Books ("
+				   "isbn varchar(18) DEFAULT NULL, "
+				   "title text, "
+				   "authors text, "
+				   "cover blob)");
+
+	// Creates the Bookmarks table.
+	query.exec("CREATE TABLE IF NOT EXISTS Bookmarks ("
+			   "isbn varchar(18) DEFAULT NULL, "
+			   "page smallint(5) NOT NULL, "
+			   "description text)");
 }
 
 /**
