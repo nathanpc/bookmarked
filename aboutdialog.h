@@ -14,8 +14,6 @@ class AboutDialog : public QDialog {
 		explicit AboutDialog(QWidget *parent = 0);
 		~AboutDialog();
 
-		void setDetail(QString name, QString version);
-
 	private:
 		Ui::AboutDialog *ui;
 };

@@ -260,7 +260,6 @@ void MainWindow::on_EditBookDialog_accepted(int status) {
  */
 void MainWindow::on_actionAbout_triggered() {
 	AboutDialog *dialog = new AboutDialog();
-	dialog->setDetail("Bookmarked", "1.0");
 	dialog->show();
 }
 

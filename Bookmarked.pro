@@ -15,20 +15,20 @@ TEMPLATE = app
 SOURCES += main.cpp\
 		mainwindow.cpp \
 	database.cpp \
-    newbookdialog.cpp \
-    addbookmarkdialog.cpp \
-    aboutdialog.cpp \
-    editbookdialog.cpp
+	newbookdialog.cpp \
+	addbookmarkdialog.cpp \
+	aboutdialog.cpp \
+	editbookdialog.cpp
 
 HEADERS  += mainwindow.h \
 	database.h \
-    newbookdialog.h \
-    addbookmarkdialog.h \
-    aboutdialog.h \
-    editbookdialog.h
+	newbookdialog.h \
+	addbookmarkdialog.h \
+	aboutdialog.h \
+	editbookdialog.h
 
 FORMS    += mainwindow.ui \
-    newbookdialog.ui \
-    addbookmarkdialog.ui \
-    aboutdialog.ui \
-    editbookdialog.ui
+	newbookdialog.ui \
+	addbookmarkdialog.ui \
+	aboutdialog.ui \
+	editbookdialog.ui
