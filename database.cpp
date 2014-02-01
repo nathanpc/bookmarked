@@ -1,4 +1,5 @@
 #include <QMessageBox>
+#include <QDesktopServices>
 
 #include "database.h"
 
@@ -12,7 +13,11 @@ Database::Database(QObject *parent) : QObject(parent) {
  */
 bool Database::open() {
 	// Build the path to the database.
+#if QT_VERSION >= 0x050000
 	QString db_path = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#else
+	QString db_path = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+#endif
 	if (!QDir(db_path).exists()) {
 		QDir().mkdir(db_path);
 	}
