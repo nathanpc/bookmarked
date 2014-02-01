@@ -19,6 +19,8 @@ class MainWindow : public QMainWindow {
 		void populateBooks();
 		void populateBookmarks(QString isbn);
 
+		void setupCustomMenus();
+
 	public:
 		explicit MainWindow(QWidget *parent = 0);
 		~MainWindow();

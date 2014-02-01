@@ -11,13 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  ui(new Ui::MainWindow) {
 	ui->setupUi(this);
 	ui->detail_view->hide();
-
-	// Setup the delete action for the bookmarks.
-	QAction *action_delbookmark = new QAction(ui->tableView);
-	action_delbookmark->setText("Delete");
-	action_delbookmark->setShortcut(QKeySequence::Delete);
-	connect(action_delbookmark, SIGNAL(triggered()), this, SLOT(on_actionRemove_selected_bookmark_triggered()));
-	ui->tableView->addAction(action_delbookmark);
+	setupCustomMenus();
 
 	// Open a connection with the database.
 	db = new Database();
@@ -31,6 +25,25 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 
 MainWindow::~MainWindow() {
 	delete ui;
+}
+
+/**
+ * Setup custom menus.
+ */
+void MainWindow::setupCustomMenus() {
+	// Delete action for the books.
+	QAction *action_delbook = new QAction(ui->books);
+	action_delbook->setText("Delete");
+	action_delbook->setShortcut(QKeySequence::Delete);
+	connect(action_delbook, SIGNAL(triggered()), this, SLOT(on_actionDelete_Current_Book_triggered()));
+	ui->books->addAction(action_delbook);
+
+	// Delete action for the bookmarks.
+	QAction *action_delbookmark = new QAction(ui->tableView);
+	action_delbookmark->setText("Delete");
+	action_delbookmark->setShortcut(QKeySequence::Delete);
+	connect(action_delbookmark, SIGNAL(triggered()), this, SLOT(on_actionRemove_selected_bookmark_triggered()));
+	ui->tableView->addAction(action_delbookmark);
 }
 
 /**
@@ -149,7 +162,17 @@ void MainWindow::on_actionRemove_selected_bookmark_triggered() {
  * The user wants to delete a book.
  */
 void MainWindow::on_actionDelete_Current_Book_triggered() {
-	QMessageBox::information(this, "Not yet implemented", "Sorry, this feature hasn't been implemented yet.");
+	QModelIndexList indexes = ui->books->selectionModel()->selectedIndexes();
+
+	if (indexes.length() > 0) {
+		int row = indexes[0].row();
+		db->deleteBook(db->books[row]["isbn"].toString());
+	} else {
+		QMessageBox::information(this, tr("Bad User"), tr("No book selected"));
+	}
+
+	populateBooks();
+	ui->detail_view->hide();
 }
 
 /**
@@ -189,6 +212,8 @@ void MainWindow::on_add_bookmark_clicked() {
 
 /**
  * The user added a new bookmark and we should refresh the model.
+ *
+ * @param status Return status.
  */
 void MainWindow::on_AddBookmarkDialog_accepted(int status) {
 	if (status == QDialog::Accepted) {

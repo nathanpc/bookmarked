@@ -82,3 +82,20 @@ QList<QHash<QString, QVariant> > Database::getBookmark(QString isbn) {
 
 	return bookmarks;
 }
+
+/**
+ * Deletes a book.
+ *
+ * @param isbn Book's ISBN.
+ */
+void Database::deleteBook(QString isbn) {
+	qDebug() << "Delete Book: " << isbn;
+
+	// Query the database.
+	QSqlQuery query;
+	query.prepare("DELETE FROM Books WHERE isbn=:isbn");
+	query.bindValue(":isbn", isbn);
+	query.exec();
+
+	// TODO: Delete every bookmark too?
+}

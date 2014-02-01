@@ -9,9 +9,6 @@
 class Database : public QObject {
 	Q_OBJECT
 
-	private:
-
-
 	public:
 		QSqlDatabase db;
 		QString error_msg;
@@ -20,8 +17,11 @@ class Database : public QObject {
 		explicit Database(QObject *parent = 0);
 
 		bool open();
+
 		int getBooks();
 		QList<QHash<QString, QVariant> > getBookmark(QString isbn);
+
+		void deleteBook(QString isbn);
 
 	signals:
 
