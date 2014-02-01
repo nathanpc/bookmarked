@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow {
 
 		void populateBooks();
 		void populateBookmarks(QString isbn);
+		void populateDetailView(QHash<QString, QVariant> book);
 
 		void setupCustomMenus();
 
@@ -28,6 +29,7 @@ class MainWindow : public QMainWindow {
 	private slots:
 		void on_AddBookmarkDialog_accepted(int status);
 		void on_NewBookDialog_accepted(int status);
+		void on_EditBookDialog_accepted(int status);
 		void on_books_currentIndexChanged(int index);
 		void on_actionNew_Book_triggered();
 		void on_books_clicked(const QModelIndex &index);
@@ -38,6 +40,7 @@ class MainWindow : public QMainWindow {
 		void on_add_bookmark_clicked();
 		void on_actionAbout_triggered();
 		void on_actionContact_Developer_triggered();
+		void on_edit_details_clicked();
 };
 
 #endif // MAINWINDOW_H

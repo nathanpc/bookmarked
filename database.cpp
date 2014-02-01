@@ -97,5 +97,5 @@ void Database::deleteBook(QString isbn) {
 	query.bindValue(":isbn", isbn);
 	query.exec();
 
-	// TODO: Delete every bookmark too?
+	// TODO: Delete every bookmark too (ask in a dialog).
 }

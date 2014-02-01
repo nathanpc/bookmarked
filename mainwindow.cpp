@@ -6,6 +6,7 @@
 #include "newbookdialog.h"
 #include "addbookmarkdialog.h"
 #include "aboutdialog.h"
+#include "editbookdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  ui(new Ui::MainWindow) {
@@ -92,6 +93,27 @@ void MainWindow::populateBookmarks(QString isbn) {
 }
 
 /**
+ * Populate the detail view.
+ *
+ * @param book Books thingy.
+ */
+void MainWindow::populateDetailView(QHash<QString, QVariant> book) {
+	// Populate the view.
+	ui->title_label->setText(book["title"].toString());
+	ui->authors_label->setText(book["authors"].toString());
+
+	// Set the book cover.
+	QImage image = QImage::fromData(book["cover"].toByteArray()).scaledToHeight(140);
+	QPixmap pixmap = QPixmap::fromImage(image);
+	ui->cover_label->setPixmap(pixmap);
+
+	// Populate the bookmarks table.
+	populateBookmarks(book["isbn"].toString());
+
+	ui->detail_view->show();
+}
+
+/**
  * Books list index has changed.
  *
  * @param index Selected index.
@@ -125,19 +147,7 @@ void MainWindow::on_books_clicked(const QModelIndex &index) {
 	QHash<QString, QVariant> book = db->books[index.row()];
 	qDebug() << "Book selected:" << index.row() << book["title"].toString();
 
-	// Populate the view.
-	ui->title_label->setText(book["title"].toString());
-	ui->authors_label->setText(book["authors"].toString());
-
-	// Set the book cover.
-	QImage image = QImage::fromData(book["cover"].toByteArray()).scaledToHeight(140);
-	QPixmap pixmap = QPixmap::fromImage(image);
-	ui->cover_label->setPixmap(pixmap);
-
-	// Populate the bookmarks table.
-	populateBookmarks(book["isbn"].toString());
-
-	ui->detail_view->show();
+	populateDetailView(book);
 }
 
 /**
@@ -234,6 +244,18 @@ void MainWindow::on_NewBookDialog_accepted(int status) {
 }
 
 /**
+ * The user probably edited a book, refresh the books.
+ *
+ * @param status Return status.
+ */
+void MainWindow::on_EditBookDialog_accepted(int status) {
+	if (status == QDialog::Accepted) {
+		populateBooks();
+		ui->detail_view->hide();
+	}
+}
+
+/**
  * Show the about dialog.
  */
 void MainWindow::on_actionAbout_triggered() {
@@ -248,4 +270,19 @@ void MainWindow::on_actionAbout_triggered() {
 void MainWindow::on_actionContact_Developer_triggered() {
 	QUrl url = QUrl("mailto:nathanpc@dreamintech.net");
 	QDesktopServices::openUrl(url);
+}
+
+/**
+ * Edit the book details.
+ */
+void MainWindow::on_edit_details_clicked() {
+	QModelIndexList indexes = ui->books->selectionModel()->selectedIndexes();
+	QString isbn = db->books[indexes[0].row()]["isbn"].toString();
+
+	EditBookDialog *dialog = new EditBookDialog();
+	dialog->setISBN(isbn);
+	dialog->populateEdits(ui->title_label->text(), ui->authors_label->text());
+	dialog->show();
+
+	connect(dialog, SIGNAL(finished(int)), this, SLOT(on_EditBookDialog_accepted(int)));
 }

@@ -17,15 +17,18 @@ SOURCES += main.cpp\
 	database.cpp \
     newbookdialog.cpp \
     addbookmarkdialog.cpp \
-    aboutdialog.cpp
+    aboutdialog.cpp \
+    editbookdialog.cpp
 
 HEADERS  += mainwindow.h \
 	database.h \
     newbookdialog.h \
     addbookmarkdialog.h \
-    aboutdialog.h
+    aboutdialog.h \
+    editbookdialog.h
 
 FORMS    += mainwindow.ui \
     newbookdialog.ui \
     addbookmarkdialog.ui \
-    aboutdialog.ui
+    aboutdialog.ui \
+    editbookdialog.ui
