@@ -26,7 +26,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 	}
 
 	// Get the books and populate the list.
-	db->getBooks();
 	populateBooks();
 }
 
@@ -39,6 +38,10 @@ MainWindow::~MainWindow() {
  */
 void MainWindow::populateBooks() {
 	QListWidget *listview = ui->books;
+	listview->clear();
+
+	// Fetch the books.
+	db->getBooks();
 
 	for (int i = 0; i < db->books.size(); ++i) {
 		// Create thumbnail.
@@ -95,7 +98,9 @@ void MainWindow::on_actionNew_Book_triggered() {
 	NewBookDialog *dialog = new NewBookDialog(this);
 	dialog->db = db;
 	dialog->setISBNDBKey("KPAQI8LK");
-	dialog->exec();
+	dialog->show();
+
+	connect(dialog, SIGNAL(finished(int)), this, SLOT(on_NewBookDialog_accepted(int)));
 }
 
 /**
@@ -189,6 +194,17 @@ void MainWindow::on_AddBookmarkDialog_accepted(int status) {
 	if (status == QDialog::Accepted) {
 		QModelIndexList indexes = ui->books->selectionModel()->selectedIndexes();
 		populateBookmarks(db->books[indexes[0].row()]["isbn"].toString());
+	}
+}
+
+/**
+ * The user probably added a new book, refresh the books.
+ *
+ * @param status Return status.
+ */
+void MainWindow::on_NewBookDialog_accepted(int status) {
+	if (status == QDialog::Accepted) {
+		populateBooks();
 	}
 }
 
