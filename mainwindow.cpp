@@ -10,6 +10,7 @@
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
 										  ui(new Ui::MainWindow) {
 	ui->setupUi(this);
+	ui->detail_view->hide();
 
 	// Setup the delete action for the bookmarks.
 	QAction *action_delbookmark = new QAction(ui->tableView);
@@ -117,6 +118,8 @@ void MainWindow::on_books_clicked(const QModelIndex &index) {
 
 	// Populate the bookmarks table.
 	populateBookmarks(book["isbn"].toString());
+
+	ui->detail_view->show();
 }
 
 /**
